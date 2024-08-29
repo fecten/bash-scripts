@@ -2,6 +2,7 @@
 
 #setting variables
 
+my_home="/home/adam"
 #where to get the deb from
 DISCORD_URL="https://discord.com/api/download?platform=linux&format=deb"
 #the path to get the current verison that the discord on your computer is on.
@@ -9,7 +10,7 @@ path_to_version_info="/usr/share/discord/resources/build_info.json"
 #get the current version of discord on your computer
 CURRENT_VERSION=$(grep '"version":' $path_to_version_info | awk -F'"' '{print $4}')
 #the dir you want the deb to be downloaded in
-DISCORD_DOWNLOAD="$HOME/Downloads/newdiscord.deb"
+DISCORD_DOWNLOAD="$my_home/Downloads/newdiscord.deb"
 
 #Download the latest .deb file
 wget -O $DISCORD_DOWNLOAD $DISCORD_URL
@@ -22,7 +23,7 @@ if [ "$LATEST_VERSION" != "$CURRENT_VERSION" ]; then
     echo "New Discord version detected: $LATEST_VERSION"
 
     #Run the updatediscord script
-    bash $HOME/Documents/proj_scripts/bash_scripts/updatediscord.sh
+    bash $my_home/Documents/proj_scripts/bash_scripts/updatediscord.sh
 
     #Kill Discord
     #Specify -15 to gracfully kill discord SIGTERM(15)
