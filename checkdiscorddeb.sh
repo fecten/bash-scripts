@@ -14,6 +14,9 @@ DISCORD_DOWNLOAD="$HOME/Downloads/newdiscord.deb"
 #Download the latest .deb file
 wget -O $DISCORD_DOWNLOAD $DISCORD_URL
 
+#Get the version of discord downloaded .deb file
+LATEST_VERSION=$(dpkg-deb -I $DISCORD_DOWNLOAD | grep Version | awk '{print $2}')
 
-echo "$DISCORD_URL $path_to_version_info $CURRENT_VERSION $DOWNLOADS"
+echo "URL:$DISCORD_URL PATHtoVer:$path_to_version_info CurrentV:$CURRENT_VERSION DownloadLOC:$DISCORD_DOWNLOAD LatestV:$LATEST_VERSION"
+
 
