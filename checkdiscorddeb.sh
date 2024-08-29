@@ -48,8 +48,10 @@ else
 
 fi
 
+#Check
+echo "Latest: $LATEST_VERSION | Current: $CURRENT_VERSION"
+
 #Clean up
 rm $DISCORD_DOWNLOAD
-echo "URL:$DISCORD_URL PATHtoVer:$path_to_version_info CurrentV:$CURRENT_VERSION DownloadLOC:$DISCORD_DOWNLOAD LatestV:$LATEST_VERSION"
 
 
