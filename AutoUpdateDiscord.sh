@@ -15,21 +15,21 @@ LATEST_VERSION=$(curl -sI $DISCORD_URL | grep -oP '(?<=/)\d+\.\d+\.\d+(?=/discor
 DISCORD_DOWNLOAD="$my_home/Downloads/discord-$LATEST_VERSION.deb"
 
 
-#Get the version of discord downloaded .deb file
-#LATEST_VERSION=$(dpkg-deb -I $DISCORD_DOWNLOAD | grep Version | awk '{print $2}')
 
 
 if [ "$LATEST_VERSION" != "$CURRENT_VERSION" ]; then
     echo "New Discord version detected: $LATEST_VERSION"
-    wget -O  $DISCORD_DOWNLOAD $DISCORD_URL
-    #Run the updatediscord script
 
+    #Get the discord.deb file with the current version and correct file name
+    wget -O $DISCORD_DOWNLOAD $DISCORD_URL
+
+    #Fail safe just to make sure that the file exists if it doesn't then it exits
     if [ ! -f "$DISCORD_DOWNLOAD" ]; then
 	echo "Error: $path_to_discord file not found."
 	exit 1
     fi
 
-    #install the discord package
+    #Install the discord package over the current version
     dpkg -i "$DISCORD_DOWNLOAD"
 
     #Kill Discord
@@ -50,6 +50,7 @@ if [ "$LATEST_VERSION" != "$CURRENT_VERSION" ]; then
     #&> redirect stdout and stderr to a file or device in this case /dev/null
     # & at the end runs it in the background.
     nohup discord &>/dev/null &
+
     #Clean Up
     rm $DISCORD_DOWNLOAD
 
