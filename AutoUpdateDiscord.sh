@@ -9,21 +9,28 @@ DISCORD_URL="https://discord.com/api/download?platform=linux&format=deb"
 path_to_version_info="/usr/share/discord/resources/build_info.json"
 #get the current version of discord on your computer
 CURRENT_VERSION=$(grep '"version":' $path_to_version_info | awk -F'"' '{print $4}')
+#getting the latest version
+LATEST_VERSION=$(curl -sI $DISCORD_URL | grep -oP '(?<=/)\d+\.\d+\.\d+(?=/discord)')
 #the dir you want the deb to be downloaded in
-DISCORD_DOWNLOAD="$my_home/Downloads/newdiscord.deb"
+DISCORD_DOWNLOAD="$my_home/Downloads/discord-$LATEST_VERSION.deb"
 
-#Download the latest .deb file
-wget -O $DISCORD_DOWNLOAD $DISCORD_URL
 
 #Get the version of discord downloaded .deb file
-LATEST_VERSION=$(dpkg-deb -I $DISCORD_DOWNLOAD | grep Version | awk '{print $2}')
+#LATEST_VERSION=$(dpkg-deb -I $DISCORD_DOWNLOAD | grep Version | awk '{print $2}')
 
 
 if [ "$LATEST_VERSION" != "$CURRENT_VERSION" ]; then
     echo "New Discord version detected: $LATEST_VERSION"
-
+    wget -O  $DISCORD_DOWNLOAD $DISCORD_URL
     #Run the updatediscord script
-    bash $my_home/Documents/proj_scripts/bash_scripts/updatediscord.sh
+
+    if [ ! -f "$DISCORD_DOWNLOAD" ]; then
+	echo "Error: $path_to_discord file not found."
+	exit 1
+    fi
+
+    #install the discord package
+    dpkg -i "$DISCORD_DOWNLOAD"
 
     #Kill Discord
     #Specify -15 to gracfully kill discord SIGTERM(15)
@@ -43,6 +50,9 @@ if [ "$LATEST_VERSION" != "$CURRENT_VERSION" ]; then
     #&> redirect stdout and stderr to a file or device in this case /dev/null
     # & at the end runs it in the background.
     nohup discord &>/dev/null &
+    #Clean Up
+    rm $DISCORD_DOWNLOAD
+
 else
     echo "Discord is up to date."
 
@@ -51,7 +61,5 @@ fi
 #Check
 echo "Latest: $LATEST_VERSION | Current: $CURRENT_VERSION"
 
-#Clean up
-rm $DISCORD_DOWNLOAD
 
 
